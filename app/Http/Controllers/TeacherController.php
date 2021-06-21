@@ -59,6 +59,7 @@ class TeacherController extends Controller {
         return redirect()->away(self::ROUTE.'teacher/show')->with('message')->with('teacher', (new Teacher())->find($id));
     }
 
+
     /**
      * Update the specified resource in storage.
      *
