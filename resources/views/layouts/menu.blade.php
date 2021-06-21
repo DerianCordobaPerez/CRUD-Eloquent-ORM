@@ -7,27 +7,27 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="/student/add">Agregar Profesor</a>
+                    <a class="nav-link" href="/teacher/create">Agregar Profesor</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/teacher/add">Agregar Clase</a>
+                    <a class="nav-link" href="/class/create">Agregar Clase</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/teacher/add">Agregar Aula</a>
+                    <a class="nav-link" href="/classroom/create">Agregar Aula</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/student/list">Listar Profesor</a>
+                    <a class="nav-link" href="/teacher/show">Listar Profesor</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/teacher/list">Listar Clases</a>
+                    <a class="nav-link" href="/class/show">Listar Clases</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/teacher/list">Listar Aulas</a>
+                    <a class="nav-link" href="/classroom/show">Listar Aulas</a>
                 </li>
             </ul>
         </div>
