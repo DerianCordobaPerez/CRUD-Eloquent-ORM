@@ -17,7 +17,7 @@ class TeacherController extends Controller {
      * @return Renderable
      */
     public function index(): Renderable {
-        return view('teachers.index');
+        return view('welcome');
     }
 
     /**
@@ -53,12 +53,11 @@ class TeacherController extends Controller {
      * Show the form for editing the specified resource.
      *
      * @param $id
-     * @return RedirectResponse
+     * @return Renderable
      */
-    public function edit($id): RedirectResponse {
-        return redirect()->away(self::ROUTE.'teacher/show')->with('message')->with('teacher', (new Teacher())->find($id));
+    public function edit($id): Renderable {
+        return view('teachers.createOrEdit')->with('message')->with('teacher', (new Teacher())->find($id));
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -66,8 +65,7 @@ class TeacherController extends Controller {
      * @param Request $request
      * @return RedirectResponse
      */
-    public function update(Request $request): RedirectResponse
-    {
+    public function update(Request $request): RedirectResponse {
         (new Teacher())->where('id', '=', $request->id ?? '')->update([
             'name' => $request->name ?? '',
             'lastName' => $request->lastName ?? '',
