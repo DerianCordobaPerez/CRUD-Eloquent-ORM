@@ -7,7 +7,7 @@
                 <form action="{{ url(is_null($classroom) ? '/classroom/create' : "/classroom/edit") }}" method="POST" class="col-md-6" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="form-group">
-                        <input type="text" class="form-control col-md-6" name="id" placeholder="ID" maxlength="10" value="{{$classroom->id ?? ''}}" {{!is_null($classroom) ? 'readonly' : ''}} required>
+                        <input type="number" class="form-control col-md-6" name="id" placeholder="ID" maxlength="10" value="{{$classroom->id ?? ''}}" {{!is_null($classroom) ? 'readonly' : ''}} required>
                     </div>
 
                     <div class="form-group">
