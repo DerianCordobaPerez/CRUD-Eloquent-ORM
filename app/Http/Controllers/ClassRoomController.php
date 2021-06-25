@@ -68,11 +68,11 @@ class ClassRoomController extends Controller {
 
     /**
      * Remove the specified resource from storage.
-     * @param Request $request
+     * @param $id
      * @return RedirectResponse
      */
-    public function destroy(Request $request): RedirectResponse {
-        (new ClassRoom())->find($request->code ?? '')->delete();
-        return redirect()->away(self::ROUTE);
+    public function destroy($id): RedirectResponse {
+        (new ClassRoom())->where('id', $id)->delete();
+        return redirect()->away(self::ROUTE.'classroom/show')->with('message', 'Aula eliminada correctamente')->with('classrooms', ClassRoom::all());
     }
 }

@@ -18,7 +18,7 @@ Route::get('/teacher/show', [TeacherController::class, 'show']);
 Route::get('/teacher/edit/{id}', [TeacherController::class, 'edit']);
 Route::post('/teacher/edit', [TeacherController::class, 'update']);
 
-Route::post('/teacher/delete/{id}', [TeacherController::class, 'destroy']);
+Route::delete('/teacher/delete/{id}', [TeacherController::class, 'destroy']);
 /*------------------------------------------------------------------------------------------------*/
 
 /*----------------------------------- RUTAS AULAS ------------------------------------------------*/
@@ -30,7 +30,7 @@ Route::get('/classroom/show', [ClassRoomController::class, 'show']);
 Route::get('/classroom/edit/{id}', [ClassRoomController::class, 'edit']);
 Route::post('/classroom/edit', [ClassRoomController::class, 'update']);
 
-Route::post('/classroom/delete/{id}', [ClassRoomController::class, 'destroy']);
+Route::delete('/classroom/delete/{id}', [ClassRoomController::class, 'destroy']);
 /*------------------------------------------------------------------------------------------------*/
 
 /*----------------------------------- RUTAS CLASES -----------------------------------------------*/
@@ -42,5 +42,5 @@ Route::get('/class/show', [ClassesController::class, 'show']);
 Route::get('/class/edit/{id}', [ClassesController::class, 'edit']);
 Route::post('/class/edit', [ClassesController::class, 'update']);
 
-Route::post('/class/delete/{id}', [ClassesController::class, 'destroy']);
+Route::delete('/class/delete/{code}', [ClassesController::class, 'destroy']);
 /*------------------------------------------------------------------------------------------------*/

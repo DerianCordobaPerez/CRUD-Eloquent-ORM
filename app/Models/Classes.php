@@ -16,6 +16,7 @@ class Classes extends Model {
     use HasFactory;
 
     protected $connection = 'mysql';
+    protected $primaryKey = 'code';
     protected $fillable = ['code', 'name', 'credit'];
     public $timestamps = false;
 }

@@ -81,7 +81,7 @@ class TeacherController extends Controller {
      * @return RedirectResponse
      */
     public function destroy($id): RedirectResponse {
-        (new Teacher())->find($id)->delete();
-        return redirect()->away(self::ROUTE);
+        (new Teacher())->where('id', $id)->delete();
+        return redirect()->away(self::ROUTE.'teacher/show')->with('message', 'Profesor eliminado correctamente')->with('teachers', Teacher::all());
     }
 }

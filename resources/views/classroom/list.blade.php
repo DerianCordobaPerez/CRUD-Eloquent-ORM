@@ -22,7 +22,12 @@
                         <td>
 
                             <div class="btn-group" role="group" aria-label="derian">
-                                <a href="/classroom/delete/{{$classroom->id}}" class="btn btn-danger">Eliminar</a>
+                                <a href="/classroom/edit/{{$classroom->id}}" class="btn btn-warning">Editar</a>
+                                <form action="{{url("/classroom/delete/$classroom->id")}}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger" name="send">Eliminar</button>
+                                </form>
                             </div>
                         </td>
                     </tr>

@@ -68,11 +68,11 @@ class ClassesController extends Controller {
 
     /**
      * Remove the specified resource from storage.
-     * @param Request $request
+     * @param $code
      * @return RedirectResponse
      */
-    public function destroy(Request $request):RedirectResponse {
-        (new Classes())->find($request->code ?? '')->delete();
-        return redirect()->away(self::ROUTE);
+    public function destroy($code):RedirectResponse {
+        (new Classes())->where('code', $code)->delete();
+        return redirect()->away(self::ROUTE.'class/show')->with('message', 'Clase eliminada correctamente')->with('classes', Classes::all());
     }
 }

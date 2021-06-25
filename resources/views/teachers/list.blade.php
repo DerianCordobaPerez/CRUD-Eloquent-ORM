@@ -19,13 +19,15 @@
                             <b>Nombre:</b> {{$teacher->name}}<br/>
                             <b>Apellido:</b> {{$teacher->lastName}}<br/>
                             <b>Título:</b> {{$teacher->title}}<br/>
-
                         </td>
                         <td>
-
                             <div class="btn-group" role="group" aria-label="derian">
                                 <a href="/teacher/edit/{{$teacher->id}}" class="btn btn-warning">Editar</a>
-                                <a href="/teacher/delete/{{$teacher->id}}" class="btn btn-danger">Eliminar</a>
+                                <form action="{{url("/teacher/delete/$teacher->id")}}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger" name="send">Eliminar</button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -37,4 +39,5 @@
             No se han agregado profesores
         </h3>
     @endif
+
 @endsection

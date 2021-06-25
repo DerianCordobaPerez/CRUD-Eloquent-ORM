@@ -21,7 +21,12 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="derian">
-                                <a href="/class/delete/{{$class->code}}" class="btn btn-danger">Eliminar</a>
+                                <a href="/class/edit/{{$class->code}}" class="btn btn-warning">Editar</a>
+                                <form action="{{url("/class/delete/$class->code")}}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger" name="send">Eliminar</button>
+                                </form>
                             </div>
                         </td>
                     </tr>
