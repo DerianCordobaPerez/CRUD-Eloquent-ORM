@@ -53,7 +53,7 @@ Route::post('/impart/create', [ImpartsController::class, 'store']);
 Route::get('/impart/show', [ImpartsController::class, 'show']);
 
 Route::get('/impart/edit/{id}', [ImpartsController::class, 'edit']);
-Route::get('/impart/edit', [ImpartsController::class, 'update']);
+Route::post('/impart/edit', [ImpartsController::class, 'update']);
 
-Route::get('/impart/delete/{id}', [ImpartsController::class, 'destroy']);
+Route::delete('/impart/delete/{id}', [ImpartsController::class, 'destroy']);
 /*------------------------------------------------------------------------------------------------*/

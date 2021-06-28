@@ -7,6 +7,7 @@ use App\Models\ClassRoom;
 use App\Models\Imparts;
 use App\Models\Teacher;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -27,7 +28,9 @@ class ImpartsController extends Controller {
      * @return Renderable
      */
     public function create():Renderable {
-        return view('imparts.createOrEdit')->with('impart')
+        return view('imparts.createOrEdit')
+            ->with('id', $id ?? '')
+            ->with('impart', [])
             ->with('content', [Teacher::all(), ClassRoom::all(), Classes::all()])
             ->with('names', ['teacher', 'classroom', 'class'])
             ->with('exists_all_records', (count(Teacher::all()) > 0 && count(ClassRoom::all()) && count(Classes::all())));
@@ -61,7 +64,16 @@ class ImpartsController extends Controller {
      * @return Renderable
      */
     public function edit($id):Renderable {
-        return view('imparts.createOrEdit')->with('impart', (new Imparts())->find($id));
+        return view('imparts.createOrEdit')
+            ->with('id', $id)
+            ->with('impart', [
+                (new Imparts())->find($id)->teacher_id,
+                (new Imparts())->find($id)->classroom_id,
+                (new Imparts())->find($id)->code_class,
+            ])
+            ->with('content', [Teacher::all(), ClassRoom::all(), Classes::all()])
+            ->with('names', ['teacher', 'classroom', 'class'])
+            ->with('exists_all_records', (count(Teacher::all()) > 0 && count(ClassRoom::all()) > 0 && count(Classes::all()) > 0));
     }
 
     /**
@@ -71,11 +83,11 @@ class ImpartsController extends Controller {
      */
     public function update(Request $request):RedirectResponse {
         (new Imparts())->where('id', '=', $request->id ?? '')->update([
-            'name' => $request->name ?? '',
-            'lastName' => $request->lastName ?? '',
-            'title' => $request->title ?? ''
+            'code_class' => $request->class ?? '',
+            'teacher_id' => $request->teacher ?? '',
+            'classroom_id' => $request->classroom ?? ''
         ]);
-        return redirect()->away(self::ROUTE.'imparts/show')->with('success', 'Datos actualizados correctamente')->with('imparts', Imparts::all());
+        return redirect()->away(self::ROUTE.'impart/show')->with('success', 'Datos actualizados correctamente')->with('imparts', Imparts::all());
     }
 
     /**
@@ -85,6 +97,6 @@ class ImpartsController extends Controller {
      */
     public function destroy($id):RedirectResponse {
         (new Imparts())->where('id', $id)->delete();
-        return redirect()->away(self::ROUTE.'imparts/show')->with('success', 'Profesor eliminado correctamente')->with('imparts', Imparts::all());
+        return redirect()->away(self::ROUTE.'impart/show')->with('success', 'Profesor eliminado correctamente')->with('imparts', Imparts::all());
     }
 }

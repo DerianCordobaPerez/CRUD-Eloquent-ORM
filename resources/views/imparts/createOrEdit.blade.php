@@ -11,12 +11,16 @@
                     </div>
                 @endif
                 <br>
-                <form action="{{url(is_null($impart) ? '/impart/create' : "/impart/edit")}}" method="POST" class="col-md-6 mx-auto" enctype="multipart/form-data">
+                <form action="{{url(count($impart) <= 0 ? '/impart/create' : "/impart/edit")}}" method="POST" class="col-md-6 mx-auto">
                     {{csrf_field()}}
+                    <input type="hidden" value="{{$id}}" name="id" />
                     @for($i = 0; $i < count($content); ++$i)
                         @if(count($content[$i]) > 0)
                             <label for="title"><strong>{{$names[$i]}}</strong></label>
                             <select id="title" name="{{$names[$i]}}" class="custom-select" required>
+                                @if(count($impart) > 0)
+                                   <option disabled value="{{$impart[$i]}}">{{$impart[$i]}} - actual</option>
+                                @endif
                                 @foreach($content[$i] as $item)
                                     <option value="{{$item->id ?? $item->code}}">
                                         {{$item->id ?? $item->code}}{{" - $item->name"}}

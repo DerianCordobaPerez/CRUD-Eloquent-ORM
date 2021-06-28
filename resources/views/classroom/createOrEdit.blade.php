@@ -4,7 +4,7 @@
         <div class="card-body">
             <div class="container">
                 <h1 align="center">Formulario Aulas</h1>
-                <form action="{{ url(is_null($classroom) ? '/classroom/create' : "/classroom/edit") }}" method="POST" class="col-md-6" enctype="multipart/form-data">
+                <form action="{{ url(is_null($classroom) ? '/classroom/create' : "/classroom/edit") }}" method="POST" class="col-md-6 mx-auto">
                     {{ csrf_field() }}
                     <div class="form-group">
                         <input type="number" class="form-control col-md-6" name="id" placeholder="ID" maxlength="10" value="{{$classroom->id ?? ''}}" {{!is_null($classroom) ? 'readonly' : ''}} required>
