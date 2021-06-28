@@ -17,7 +17,7 @@
                     <div class="form-group">
                         <input type="number" class="form-control col-md-6" name="credit" placeholder="Credito" value="{{$class->credit ?? ''}}" required>
                     </div>
-                    <button type="submit" name="send" class="btn btn-danger">Enviar</button>
+                    <button type="submit" name="send" class="btn btn-primary">Enviar</button>
                 </form>
             </div>
         </div>

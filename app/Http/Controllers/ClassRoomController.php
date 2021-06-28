@@ -33,7 +33,7 @@ class ClassRoomController extends Controller {
      */
     public function store(Request $request):RedirectResponse {
         (new ClassRoom())->create($request->all());
-        return redirect()->away(self::ROUTE.'classroom/show')->with('message', 'Se agregado correctamente el aula')->with('classroom', ClassRoom::all());
+        return redirect()->away(self::ROUTE.'classroom/show')->with('success', 'Se agregado correctamente el aula')->with('classroom', ClassRoom::all());
     }
 
     /**
@@ -41,7 +41,7 @@ class ClassRoomController extends Controller {
      * @return Renderable
      */
     public function show(): Renderable {
-        return view('classroom.list')->with('message')->with('classrooms', ClassRoom::all());
+        return view('classroom.list')->with('classrooms', ClassRoom::all());
     }
 
     /**
@@ -50,7 +50,7 @@ class ClassRoomController extends Controller {
      * @return Renderable
      */
     public function edit($id):Renderable {
-        return view('classroom.createOrEdit')->with('message')->with('classroom', (new ClassRoom())->find($id));
+        return view('classroom.createOrEdit')->with('classroom', (new ClassRoom())->find($id));
     }
 
     /**
@@ -63,7 +63,7 @@ class ClassRoomController extends Controller {
             'name' => $request->name ?? '',
             'location' => $request->location ?? ''
         ]);
-        return redirect()->away(self::ROUTE.'classroom/show')->with('message', 'Aula actualizada correctamente')->with('classrooms', ClassRoom::all());
+        return redirect()->away(self::ROUTE.'classroom/show')->with('success', 'Aula actualizada correctamente')->with('classrooms', ClassRoom::all());
     }
 
     /**
@@ -73,6 +73,6 @@ class ClassRoomController extends Controller {
      */
     public function destroy($id): RedirectResponse {
         (new ClassRoom())->where('id', $id)->delete();
-        return redirect()->away(self::ROUTE.'classroom/show')->with('message', 'Aula eliminada correctamente')->with('classrooms', ClassRoom::all());
+        return redirect()->away(self::ROUTE.'classroom/show')->with('success', 'Aula eliminada correctamente')->with('classrooms', ClassRoom::all());
     }
 }

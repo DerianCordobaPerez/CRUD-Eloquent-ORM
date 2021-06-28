@@ -1,10 +1,5 @@
 @extends('layouts.main')
 @section('content')
-
-    @if(!is_null($message))
-        <div class="alert alert-success" role="alert">{{$message}}</div>
-    @endif
-
     @if (count($classes) > 0)
         <div class="container" >
             <table class="table table-dark">

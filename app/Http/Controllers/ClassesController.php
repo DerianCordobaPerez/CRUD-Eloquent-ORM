@@ -33,7 +33,7 @@ class ClassesController extends Controller {
      */
     public function store(Request $request):RedirectResponse {
         (new Classes())->create($request->all());
-        return redirect()->away(self::ROUTE.'class/show')->with('message', 'Se agregado correctamente la clase')->with('class', Classes::all());
+        return redirect()->away(self::ROUTE.'class/show')->with('success', 'Se agregado correctamente la clase')->with('class', Classes::all());
    }
 
     /**
@@ -41,7 +41,7 @@ class ClassesController extends Controller {
      * @return Renderable
      */
     public function show():Renderable {
-        return view('classes.list')->with('message')->with('classes', Classes::all());
+        return view('classes.list')->with('classes', Classes::all());
     }
 
     /**
@@ -50,7 +50,7 @@ class ClassesController extends Controller {
      * @return Renderable
      */
     public function edit($id):Renderable {
-        return view('classes.createOrEdit')->with('message')->with('class', (new Classes())->find($id));
+        return view('classes.createOrEdit')->with('class', (new Classes())->find($id));
     }
 
     /**
@@ -63,7 +63,7 @@ class ClassesController extends Controller {
            'name' => $request->name ?? '',
            'credit' => $request->credit ?? ''
         ]);
-        return redirect()->away(self::ROUTE.'class/show')->with('message', 'Clase actualizada correctamente')->with('classes', Classes::all());
+        return redirect()->away(self::ROUTE.'class/show')->with('success', 'Clase actualizada correctamente')->with('classes', Classes::all());
     }
 
     /**
@@ -73,6 +73,6 @@ class ClassesController extends Controller {
      */
     public function destroy($code):RedirectResponse {
         (new Classes())->where('code', $code)->delete();
-        return redirect()->away(self::ROUTE.'class/show')->with('message', 'Clase eliminada correctamente')->with('classes', Classes::all());
+        return redirect()->away(self::ROUTE.'class/show')->with('success', 'Clase eliminada correctamente')->with('classes', Classes::all());
     }
 }
