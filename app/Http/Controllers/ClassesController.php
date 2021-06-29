@@ -73,6 +73,6 @@ class ClassesController extends Controller {
      */
     public function destroy($code):RedirectResponse {
         (new Classes())->where('code', $code)->delete();
-        return redirect()->away(self::ROUTE.'class/show')->with('success', 'Clase eliminada correctamente')->with('classes', Classes::all());
+        return redirect()->away(self::ROUTE.'class/show')->with('error', 'Clase eliminada correctamente')->with('classes', Classes::all());
     }
 }

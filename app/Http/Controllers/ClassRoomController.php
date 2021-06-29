@@ -73,6 +73,6 @@ class ClassRoomController extends Controller {
      */
     public function destroy($id): RedirectResponse {
         (new ClassRoom())->where('id', $id)->delete();
-        return redirect()->away(self::ROUTE.'classroom/show')->with('success', 'Aula eliminada correctamente')->with('classrooms', ClassRoom::all());
+        return redirect()->away(self::ROUTE.'classroom/show')->with('error', 'Aula eliminada correctamente')->with('classrooms', ClassRoom::all());
     }
 }

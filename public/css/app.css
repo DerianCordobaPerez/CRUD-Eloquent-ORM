@@ -1,1 +1,11 @@
+body {
+    background: linear-gradient(90deg, rgba(175,0,55,1) 0%, rgba(215,0,0,1) 43%, rgba(255,220,0,1) 100%);
+}
 
+.transparent-80 {
+    opacity: 80%;
+}
+
+.transparent-90 {
+    opacity: 90%;
+}

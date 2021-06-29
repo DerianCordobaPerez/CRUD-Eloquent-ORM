@@ -26,8 +26,8 @@
 <div class="app">
     @include('layouts.menu')
 
-    <main class="container py-4 mb-5 mt-5">
-        @include('layouts.alert-notification')
+    <main class="container mb-5 mt-5">
+        @include('layouts.notification')
         @yield('content')
     </main>
 </div>

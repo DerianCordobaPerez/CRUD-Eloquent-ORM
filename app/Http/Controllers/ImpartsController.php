@@ -97,6 +97,6 @@ class ImpartsController extends Controller {
      */
     public function destroy($id):RedirectResponse {
         (new Imparts())->where('id', $id)->delete();
-        return redirect()->away(self::ROUTE.'impart/show')->with('success', 'Profesor eliminado correctamente')->with('imparts', Imparts::all());
+        return redirect()->away(self::ROUTE.'impart/show')->with('error', 'Profesor eliminado correctamente')->with('imparts', Imparts::all());
     }
 }

@@ -3,12 +3,11 @@
 use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ClassRoomController;
 use App\Http\Controllers\ImpartsController;
+use App\Http\Controllers\IndexController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TeacherController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [IndexController::class, 'index']);
 
 /*----------------------------------- RUTAS PROFESOR ---------------------------------------------*/
 Route::get('/teacher/create', [TeacherController::class, 'create']);
