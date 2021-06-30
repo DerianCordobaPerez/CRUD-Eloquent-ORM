@@ -11,6 +11,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed name
  * @mixin Builder
  */
-class Roles extends Model {
+class Role extends Model {
     use HasFactory;
+    protected $guarded = ['id'];
+    protected $fillable = ['name'];
+
+    public function users() {
+        return $this->belongsToMany('App\Models\User');
+    }
 }

@@ -18,12 +18,4 @@ class RolesUser extends Model {
     protected $guarded = ['id'];
     protected $fillable = ['user_id', 'role_id'];
     public $incrementing = true;
-
-    public function users() {
-        $this->belongsTo(User::class, 'id', 'user_id');
-    }
-
-    public function roles() {
-        $this->belongsTo(Roles::class, 'id', 'role_id');
-    }
 }

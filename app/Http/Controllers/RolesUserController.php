@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Classes;
 use App\Models\ClassRoom;
-use App\Models\Roles;
+use App\Models\Role;
 use App\Models\RolesUser;
 use App\Models\Teacher;
 use App\Models\User;
@@ -31,9 +31,9 @@ class RolesUserController extends Controller {
         return view('roles.assignOrEdit')
             ->with('id', $id ?? '')
             ->with('roles', [])
-            ->with('content', [(new User())->select()->whereNotIn('name', ['admin'])->get(), Roles::all()])
+            ->with('content', [(new User())->select()->whereNotIn('name', ['admin'])->get(), Role::all()])
             ->with('names', ['users', 'roles'])
-            ->with('exists_all_records', (count(User::all()) > 0 && count(Roles::all()) > 0));
+            ->with('exists_all_records', (count(User::all()) > 0 && count(Role::all()) > 0));
     }
 
     /**
@@ -69,9 +69,9 @@ class RolesUserController extends Controller {
                 (new RolesUser())->find($id)->user_id,
                 (new RolesUser())->find($id)->role_id
             ])
-            ->with('content', [(new User())->select()->whereNotIn('name', ['admin'])->get(), Roles::all()])
+            ->with('content', [(new User())->select()->whereNotIn('name', ['admin'])->get(), Role::all()])
             ->with('names', ['users', 'roles'])
-            ->with('exists_all_records', (count(User::all()) > 0 && count(Roles::all()) > 0));
+            ->with('exists_all_records', (count(User::all()) > 0 && count(Role::all()) > 0));
     }
 
     /**

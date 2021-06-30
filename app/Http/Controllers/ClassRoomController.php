@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classes;
 use App\Models\ClassRoom;
+use App\Models\Teacher;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,10 +23,12 @@ class ClassRoomController extends Controller {
 
     /**
      * Show the form for creating a new resource.
-     * @return Renderable
+     * @return Renderable|RedirectResponse
      */
-    public function create():Renderable {
-        return view('classroom.createOrEdit')->with('classroom');
+    public function create():Renderable|RedirectResponse {
+        if(Gate::allows('create'))
+            return view('classroom.createOrEdit')->with('classroom');
+        return $this->redirectToHome('error', 'No tienes permitido realizar esta accion');
     }
 
     /**
@@ -47,10 +52,14 @@ class ClassRoomController extends Controller {
     /**
      * Show the form for editing the specified resource.
      * @param $id
-     * @return Renderable
+     * @return Renderable|RedirectResponse
      */
-    public function edit($id):Renderable {
-        return view('classroom.createOrEdit')->with('classroom', (new ClassRoom())->find($id));
+    public function edit($id):Renderable|RedirectResponse {
+        if(Auth::check()) {
+            if(Auth::user()->can('edit', (new Teacher())->find($id)))
+                return view('classroom.createOrEdit')->with('classroom', (new ClassRoom())->find($id));
+        }
+        return $this->redirectToHome('error', 'No estas autorizado para esta accion');
     }
 
     /**
@@ -74,5 +83,12 @@ class ClassRoomController extends Controller {
     public function destroy($id): RedirectResponse {
         (new ClassRoom())->where('id', $id)->delete();
         return redirect()->away(self::ROUTE.'classroom/show')->with('error', 'Aula eliminada correctamente')->with('classrooms', ClassRoom::all());
+    }
+
+    private function redirectToHome($type, $message): RedirectResponse {
+        return redirect()->away(self::ROUTE)->with($type, $message)
+            ->with('names', ['Profesores', 'Aulas', 'Clases'])
+            ->with('counts', [count(Teacher::all()), count(ClassRoom::all()), count(Classes::all())])
+            ->with('available', (count(Teacher::all()) > 0 && count(ClassRoom::all()) > 0 && count(Classes::all()) > 0));
     }
 }

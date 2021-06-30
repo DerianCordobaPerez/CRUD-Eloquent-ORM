@@ -6,6 +6,8 @@ use App\Models\Classes;
 use App\Models\ClassRoom;
 use App\Models\Imparts;
 use App\Models\Teacher;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,15 +30,17 @@ class ImpartsController extends Controller {
 
     /**
      * Show the form for creating a new resource.
-     * @return Renderable
+     * @return Renderable|RedirectResponse
      */
-    public function create():Renderable {
-        return view('imparts.createOrEdit')
-            ->with('id', $id ?? '')
-            ->with('impart', [])
-            ->with('content', [Teacher::all(), ClassRoom::all(), Classes::all()])
-            ->with('names', ['teacher', 'classroom', 'class'])
-            ->with('exists_all_records', (count(Teacher::all()) > 0 && count(ClassRoom::all()) > 0 && count(Classes::all()) > 0));
+    public function create():Renderable|RedirectResponse {
+        if(Gate::allows('create'))
+            return view('imparts.createOrEdit')
+                ->with('id', $id ?? '')
+                ->with('impart', [])
+                ->with('content', [Teacher::all(), ClassRoom::all(), Classes::all()])
+                ->with('names', ['teacher', 'classroom', 'class'])
+                ->with('exists_all_records', (count(Teacher::all()) > 0 && count(ClassRoom::all()) > 0 && count(Classes::all()) > 0));
+        return $this->redirectToHome('error', 'No tienes permitido realizar esta accion');
     }
 
     /**
@@ -64,19 +68,23 @@ class ImpartsController extends Controller {
     /**
      * Show the form for editing the specified resource.
      * @param  $id
-     * @return Renderable
+     * @return Renderable|RedirectResponse
      */
-    public function edit($id):Renderable {
-        return view('imparts.createOrEdit')
-            ->with('id', $id)
-            ->with('impart', [
-                (new Imparts())->find($id)->teacher_id,
-                (new Imparts())->find($id)->classroom_id,
-                (new Imparts())->find($id)->code_class,
-            ])
-            ->with('content', [Teacher::all(), ClassRoom::all(), Classes::all()])
-            ->with('names', ['teacher', 'classroom', 'class'])
-            ->with('exists_all_records', (count(Teacher::all()) > 0 && count(ClassRoom::all()) > 0 && count(Classes::all()) > 0));
+    public function edit($id):Renderable|RedirectResponse {
+        if(Auth::check()) {
+            if(Auth::user()->can('edit', (new Teacher())->find($id)))
+                return view('imparts.createOrEdit')
+                    ->with('id', $id)
+                    ->with('impart', [
+                        (new Imparts())->find($id)->teacher_id,
+                        (new Imparts())->find($id)->classroom_id,
+                        (new Imparts())->find($id)->code_class,
+                    ])
+                    ->with('content', [Teacher::all(), ClassRoom::all(), Classes::all()])
+                    ->with('names', ['teacher', 'classroom', 'class'])
+                    ->with('exists_all_records', (count(Teacher::all()) > 0 && count(ClassRoom::all()) > 0 && count(Classes::all()) > 0));
+        }
+        return $this->redirectToHome('error', 'No estas autorizado para esta accion');
     }
 
     /**
@@ -103,4 +111,10 @@ class ImpartsController extends Controller {
         return redirect()->away(self::ROUTE.'impart/show')->with('error', 'Profesor eliminado correctamente')->with('imparts', Imparts::all());
     }
 
+    private function redirectToHome($type, $message): RedirectResponse {
+        return redirect()->away(self::ROUTE)->with($type, $message)
+            ->with('names', ['Profesores', 'Aulas', 'Clases'])
+            ->with('counts', [count(Teacher::all()), count(ClassRoom::all()), count(Classes::all())])
+            ->with('available', (count(Teacher::all()) > 0 && count(ClassRoom::all()) > 0 && count(Classes::all()) > 0));
+    }
 }
