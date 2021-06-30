@@ -1,0 +1,12 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+body {
+    background: linear-gradient(90deg, rgba(175, 0, 55, 1) 0%, rgba(215, 0, 0, 1) 43%, rgba(255, 220, 0, 1) 100%);
+}

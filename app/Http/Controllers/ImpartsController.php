@@ -7,13 +7,16 @@ use App\Models\ClassRoom;
 use App\Models\Imparts;
 use App\Models\Teacher;
 use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class ImpartsController extends Controller {
 
     const ROUTE = 'http://127.0.0.1:8000/';
+
+    public function __construct() {
+        $this->middleware('auth');
+    }
 
     /**
      * Display a listing of the resource.
@@ -33,7 +36,7 @@ class ImpartsController extends Controller {
             ->with('impart', [])
             ->with('content', [Teacher::all(), ClassRoom::all(), Classes::all()])
             ->with('names', ['teacher', 'classroom', 'class'])
-            ->with('exists_all_records', (count(Teacher::all()) > 0 && count(ClassRoom::all()) && count(Classes::all())));
+            ->with('exists_all_records', (count(Teacher::all()) > 0 && count(ClassRoom::all()) > 0 && count(Classes::all()) > 0));
     }
 
     /**
@@ -99,4 +102,5 @@ class ImpartsController extends Controller {
         (new Imparts())->where('id', $id)->delete();
         return redirect()->away(self::ROUTE.'impart/show')->with('error', 'Profesor eliminado correctamente')->with('imparts', Imparts::all());
     }
+
 }

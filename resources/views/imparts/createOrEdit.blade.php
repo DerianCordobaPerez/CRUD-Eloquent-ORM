@@ -32,9 +32,7 @@
                                 @endif
                                 <hr/>
                             @endfor
-                        </div>
 
-                        <div class="card-footer">
                             @if($exists_all_records)
                                 <div class="d-grid gap-2">
                                     <button type="submit" name="send" class="btn btn-primary">Enviar</button>
@@ -42,7 +40,6 @@
                             @else
                                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                                     No se puede guardar un registro sin tener todos los requisitos
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endif
                         </div>

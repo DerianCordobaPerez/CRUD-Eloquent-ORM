@@ -4,6 +4,8 @@ use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ClassRoomController;
 use App\Http\Controllers\ImpartsController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\RolesUserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TeacherController;
 
@@ -56,3 +58,15 @@ Route::post('/impart/edit', [ImpartsController::class, 'update']);
 
 Route::delete('/impart/delete/{id}', [ImpartsController::class, 'destroy']);
 /*------------------------------------------------------------------------------------------------*/
+
+/*----------------------------------- RUTAS ROLES ------------------------------------------------*/
+Route::get('/role_user/assign', [RolesUserController::class, 'create']);
+Route::post('/role_user/assign', [RolesUserController::class, 'store']);
+
+Route::get('/role_user/edit/{id}', [RolesUserController::class, 'edit']);
+Route::post('/role_user/edit', [RolesUserController::class, 'update']);
+
+Route::delete('/role_user/delete/{id}', [RolesUserController::class, 'destroy']);
+/*------------------------------------------------------------------------------------------------*/
+
+Auth::routes();
