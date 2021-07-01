@@ -58,8 +58,10 @@ class ClassRoomController extends Controller {
      * @return Renderable|RedirectResponse
      */
     public function edit($id):Renderable|RedirectResponse {
-        if((Auth::check() && Auth::user()->can('edit', (new ClassRoom())->find($id))) || Auth::user()->name === self::ADMIN)
-            return view('classroom.createOrEdit')->with('classroom', (new ClassRoom())->find($id));
+        if(Auth::check()) {
+            if(Auth::user()->can('edit', (new ClassRoom())->find($id)) || Auth::user()->name === self::ADMIN)
+                return view('classroom.createOrEdit')->with('classroom', (new ClassRoom())->find($id));
+        }
         return $this->redirectToHome('error', 'No estas autorizado para esta accion');
     }
 
@@ -82,9 +84,11 @@ class ClassRoomController extends Controller {
      * @return RedirectResponse
      */
     public function destroy($id): RedirectResponse {
-        if(Auth::check() && Auth::user()->name === self::ADMIN) {
-            (new ClassRoom())->where('id', $id)->delete();
-            return redirect()->away(self::ROUTE.'classroom/show')->with('error', 'Aula eliminada correctamente')->with('classrooms', ClassRoom::all());
+        if(Auth::check()) {
+            if(Auth::user()->name === self::ADMIN) {
+                (new ClassRoom())->where('id', $id)->delete();
+                return redirect()->away(self::ROUTE.'classroom/show')->with('error', 'Aula eliminada correctamente')->with('classrooms', ClassRoom::all());
+            }
         }
         return $this->redirectToHome('error', 'Solo el Administrador puede realizar esta operacion');
     }

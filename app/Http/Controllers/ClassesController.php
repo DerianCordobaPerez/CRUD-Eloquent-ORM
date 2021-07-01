@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Classes;
 use App\Models\ClassRoom;
 use App\Models\Teacher;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
@@ -57,8 +58,10 @@ class ClassesController extends Controller {
      * @return Renderable|RedirectResponse
      */
     public function edit($id):Renderable|RedirectResponse {
-        if((Auth::check() && Auth::user()->can('edit', (new Classes())->find($id))) || Auth::user()->name === self::ADMIN)
-            return view('classes.createOrEdit')->with('class', (new Classes())->find($id));
+        if(Auth::check()){
+            if(Auth::user()->can('edit', (new Classes())->find($id)) || Auth::user()->name === self::ADMIN)
+                return view('classes.createOrEdit')->with('class', (new Classes())->find($id));
+        }
         return $this->redirectToHome('error', 'No estas autorizado para esta accion');
     }
 
@@ -81,9 +84,11 @@ class ClassesController extends Controller {
      * @return RedirectResponse
      */
     public function destroy($code):RedirectResponse {
-        if(Auth::check() && Auth::user()->name === self::ADMIN) {
-            (new Classes())->where('code', $code)->delete();
-            return redirect()->away(self::ROUTE.'class/show')->with('error', 'Clase eliminada correctamente')->with('classes', Classes::all());
+        if(Auth::check()) {
+            if(Auth::user()->name === self::ADMIN) {
+                (new Classes())->where('code', $code)->delete();
+                return redirect()->away(self::ROUTE.'class/show')->with('error', 'Clase eliminada correctamente')->with('classes', Classes::all());
+            }
         }
         return $this->redirectToHome('error', 'Solo el Administrador puede realizar esta operacion');
     }

@@ -73,17 +73,19 @@ class ImpartsController extends Controller {
      * @return Renderable|RedirectResponse
      */
     public function edit($id):Renderable|RedirectResponse {
-        if((Auth::check() && Auth::user()->can('edit', (new Imparts())->find($id))) || Auth::user()->name === self::ADMIN)
-            return view('imparts.createOrEdit')
-                ->with('id', $id)
-                ->with('impart', [
-                    (new Imparts())->find($id)->teacher_id,
-                    (new Imparts())->find($id)->classroom_id,
-                    (new Imparts())->find($id)->code_class,
-                ])
-                ->with('content', [Teacher::all(), ClassRoom::all(), Classes::all()])
-                ->with('names', ['teacher', 'classroom', 'class'])
-                ->with('exists_all_records', (count(Teacher::all()) > 0 && count(ClassRoom::all()) > 0 && count(Classes::all()) > 0));
+        if(Auth::check()) {
+            if (Auth::user()->can('edit', (new Imparts())->find($id)) || Auth::user()->name === self::ADMIN)
+                return view('imparts.createOrEdit')
+                    ->with('id', $id)
+                    ->with('impart', [
+                        (new Imparts())->find($id)->teacher_id,
+                        (new Imparts())->find($id)->classroom_id,
+                        (new Imparts())->find($id)->code_class,
+                    ])
+                    ->with('content', [Teacher::all(), ClassRoom::all(), Classes::all()])
+                    ->with('names', ['teacher', 'classroom', 'class'])
+                    ->with('exists_all_records', (count(Teacher::all()) > 0 && count(ClassRoom::all()) > 0 && count(Classes::all()) > 0));
+        }
         return $this->redirectToHome('error', 'No estas autorizado para esta accion');
     }
 
@@ -107,9 +109,11 @@ class ImpartsController extends Controller {
      * @return RedirectResponse
      */
     public function destroy($id):RedirectResponse {
-        if(Auth::check() && Auth::user()->name === self::ADMIN) {
-            (new Imparts())->where('id', $id)->delete();
-            return redirect()->away(self::ROUTE.'impart/show')->with('error', 'Profesor eliminado correctamente')->with('imparts', Imparts::all());
+        if(Auth::check()) {
+            if(Auth::user()->name === self::ADMIN) {
+                (new Imparts())->where('id', $id)->delete();
+                return redirect()->away(self::ROUTE.'impart/show')->with('error', 'Profesor eliminado correctamente')->with('imparts', Imparts::all());
+            }
         }
         return $this->redirectToHome('error', 'Solo el Administrador puede realizar esta operacion');
     }

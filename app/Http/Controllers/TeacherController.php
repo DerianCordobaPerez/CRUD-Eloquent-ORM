@@ -60,8 +60,10 @@ class TeacherController extends Controller {
      * @return Renderable|RedirectResponse
      */
     public function edit($id): Renderable|RedirectResponse {
-        if((Auth::check() && Auth::user()->can('edit', (new Teacher())->find($id))) || Auth::user()->name === self::ADMIN)
-            return view('teachers.createOrEdit')->with('teacher', (new Teacher())->find($id));
+        if(Auth::check()) {
+            if(Auth::user()->can('edit', (new Teacher())->find($id)) || Auth::user()->name === self::ADMIN)
+                return view('teachers.createOrEdit')->with('teacher', (new Teacher())->find($id));
+        }
         return $this->redirectToHome('error', 'No estas autorizado para esta accion');
     }
 
@@ -85,9 +87,11 @@ class TeacherController extends Controller {
      * @return RedirectResponse
      */
     public function destroy($id): RedirectResponse {
-        if(Auth::check() && Auth::user()->name === self::ADMIN) {
-            (new Teacher())->where('id', $id)->delete();
-            return redirect()->away(self::ROUTE.'teacher/show')->with('success', 'Profesor eliminado correctamente')->with('teachers', Teacher::all());
+        if(Auth::check()) {
+            if(Auth::user()->name === self::ADMIN) {
+                (new Teacher())->where('id', $id)->delete();
+                return redirect()->away(self::ROUTE.'teacher/show')->with('success', 'Profesor eliminado correctamente')->with('teachers', Teacher::all());
+            }
         }
         return $this->redirectToHome('error', 'Solo el Administrador puede realizar esta operacion');
     }

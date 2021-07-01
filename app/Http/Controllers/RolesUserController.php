@@ -9,6 +9,7 @@ use App\Models\RoleUser;
 use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,20 +23,23 @@ class RolesUserController extends Controller {
      * @return Renderable|RedirectResponse
      */
     public function create():Renderable|RedirectResponse {
-        if(trim(strtolower(Auth::user()->name)) !== self::ADMIN)
-            return $this->redirectToHome("error", "Solo el Administrador puede acceder a esta ruta");
-
-        return view('roles.assignOrEdit')
-            ->with('id', $id ?? '')
-            ->with('roles', [])
-            ->with('content', [(new User())->select()->whereNotIn('name', ['admin'])->get(), Role::all()])
-            ->with('names', ['user', 'role'])
-            ->with('exists_all_records', (count((new User())->select()->whereNotIn('name', ['admin'])->get()) > 0 && count(Role::all()) > 0));
+        if(Auth::check()) {
+            if(trim(strtolower(Auth::user()->name)) === self::ADMIN)
+                return view('roles.assignOrEdit')
+                    ->with('id', $id ?? '')
+                    ->with('roles', [])
+                    ->with('content', [(new User())->select()->whereNotIn('name', ['admin'])->get(), Role::all()])
+                    ->with('names', ['user', 'role'])
+                    ->with('exists_all_records', (count((new User())->select()->whereNotIn('name', ['admin'])->get()) > 0 && count(Role::all()) > 0));
+        }
+        return $this->redirectToHome("error", "Solo el Administrador puede acceder a esta ruta");
     }
 
     public function show():Renderable|RedirectResponse {
-        if(Auth::check() && Auth::user()->name === self::ADMIN)
-            return view('roles.list')->with('roleUser', RoleUser::all());
+        if(Auth::check()) {
+            if(Auth::user()->name === self::ADMIN)
+                return view('roles.list')->with('roleUser', RoleUser::all());
+        }
         return $this->redirectToHome('error', 'Solo el Administrador puede realizar esta operacion');
     }
 
@@ -53,13 +57,15 @@ class RolesUserController extends Controller {
             'user_id' => $request->user ?? '',
             'role_id' => $request->role ?? ''
         ]);
-        return $this->redirectToHome("success", "Se agregaro correctamente el roles");
+        return $this->redirectToHome("success", "Se agrego correctamente el rol");
     }
 
     public function destroy($id):RedirectResponse {
-        if(Auth::check() && Auth::user()->name === self::ADMIN) {
-            (new RoleUser())->where('id', $id)->delete();
-            return redirect()->away(self::ROUTE.'role_user/show')->with('success', 'Rol eliminado correctamente')->with('roleUser', RoleUser::all());
+        if(Auth::check()) {
+            if(Auth::user()->name === self::ADMIN) {
+                (new RoleUser())->where('id', $id)->delete();
+                return redirect()->away(self::ROUTE.'role_user/show')->with('success', 'Rol eliminado correctamente')->with('roleUser', RoleUser::all());
+            }
         }
         return $this->redirectToHome('error', 'Solo el Administrador puede realizar esta operacion');
     }
