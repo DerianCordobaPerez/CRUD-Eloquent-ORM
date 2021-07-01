@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Classes;
 use App\Models\ClassRoom;
 use App\Models\Role;
-use App\Models\RolesUser;
+use App\Models\RoleUser;
 use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,10 +17,8 @@ class RolesUserController extends Controller {
     const ROUTE = 'http://127.0.0.1:8000/';
     const ADMIN = 'admin';
 
-
     /**
      * Show the form for creating a new resource.
-     *
      * @return Renderable|RedirectResponse
      */
     public function create():Renderable|RedirectResponse {
@@ -32,8 +29,8 @@ class RolesUserController extends Controller {
             ->with('id', $id ?? '')
             ->with('roles', [])
             ->with('content', [(new User())->select()->whereNotIn('name', ['admin'])->get(), Role::all()])
-            ->with('names', ['users', 'roles'])
-            ->with('exists_all_records', (count(User::all()) > 0 && count(Role::all()) > 0));
+            ->with('names', ['user', 'role'])
+            ->with('exists_all_records', (count((new User())->select()->whereNotIn('name', ['admin'])->get()) > 0 && count(Role::all()) > 0));
     }
 
     /**
@@ -46,9 +43,9 @@ class RolesUserController extends Controller {
         if(trim(strtolower(Auth::user()->name)) !== self::ADMIN)
             return $this->redirectToHome("error", "Solo el Administrador puede acceder a esta ruta");
 
-        (new RolesUser())->create([
-            'user_id' => $request->users ?? '',
-            'role_id' => $request->roles ?? ''
+        (new RoleUser())->create([
+            'user_id' => $request->user ?? '',
+            'role_id' => $request->role ?? ''
         ]);
         return $this->redirectToHome("success", "Se agregaro correctamente el roles");
     }
@@ -66,8 +63,8 @@ class RolesUserController extends Controller {
         return view('roles.assignOrEdit')
             ->with('id', $id)
             ->with('roles', [
-                (new RolesUser())->find($id)->user_id,
-                (new RolesUser())->find($id)->role_id
+                (new RoleUser())->find($id)->user_id,
+                (new RoleUser())->find($id)->role_id
             ])
             ->with('content', [(new User())->select()->whereNotIn('name', ['admin'])->get(), Role::all()])
             ->with('names', ['users', 'roles'])
@@ -84,7 +81,7 @@ class RolesUserController extends Controller {
         if(trim(strtolower(Auth::user()->name)) !== self::ADMIN)
             return $this->redirectToHome("error", "Solo el Administrador puede acceder a esta ruta");
 
-        (new RolesUser())->where('id', '=', $request->id ?? '')->update([
+        (new RoleUser())->where('id', '=', $request->id ?? '')->update([
             'user_id' => $request->users ?? '',
             'role_id' => $request->roles ?? ''
         ]);
@@ -100,7 +97,7 @@ class RolesUserController extends Controller {
         if(trim(strtolower(Auth::user()->name)) !== self::ADMIN)
             return $this->redirectToHome("error", "Solo el Administrador puede acceder a esta ruta");
 
-        (new RolesUser())->where('id', $id)->delete();
+        (new RoleUser())->where('id', $id)->delete();
         return $this->redirectToHome("success", "Se elimino correctamente el roles");
     }
 

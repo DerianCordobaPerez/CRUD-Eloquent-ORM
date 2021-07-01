@@ -6,7 +6,7 @@ use App\Models\Classes;
 use App\Models\ClassRoom;
 use App\Models\Imparts;
 use App\Models\Teacher;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 class ImpartsController extends Controller {
 
     const ROUTE = 'http://127.0.0.1:8000/';
+    const ADMIN = 'admin';
 
     public function __construct() {
         $this->middleware('auth');
@@ -107,8 +108,11 @@ class ImpartsController extends Controller {
      * @return RedirectResponse
      */
     public function destroy($id):RedirectResponse {
-        (new Imparts())->where('id', $id)->delete();
-        return redirect()->away(self::ROUTE.'impart/show')->with('error', 'Profesor eliminado correctamente')->with('imparts', Imparts::all());
+        if(Auth::check() && Auth::user()->name === self::ADMIN) {
+            (new Imparts())->where('id', $id)->delete();
+            return redirect()->away(self::ROUTE.'impart/show')->with('error', 'Profesor eliminado correctamente')->with('imparts', Imparts::all());
+        }
+        return $this->redirectToHome('error', 'Solo el Administrador puede realizar esta operacion');
     }
 
     private function redirectToHome($type, $message): RedirectResponse {

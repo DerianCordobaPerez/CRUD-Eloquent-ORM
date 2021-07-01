@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 
 class TeacherController extends Controller {
     const ROUTE = 'http://127.0.0.1:8000/';
+    const ADMIN = 'admin';
 
     /**
      * Display a listing of the resource.
@@ -85,8 +86,11 @@ class TeacherController extends Controller {
      * @return RedirectResponse
      */
     public function destroy($id): RedirectResponse {
-        (new Teacher())->where('id', $id)->delete();
-        return redirect()->away(self::ROUTE.'teacher/show')->with('error', 'Profesor eliminado correctamente')->with('teachers', Teacher::all());
+        if(Auth::check() && Auth::user()->name === self::ADMIN) {
+            (new Teacher())->where('id', $id)->delete();
+            return redirect()->away(self::ROUTE.'teacher/show')->with('success', 'Profesor eliminado correctamente')->with('teachers', Teacher::all());
+        }
+        return $this->redirectToHome('error', 'Solo el Administrador puede realizar esta operacion');
     }
 
     private function redirectToHome($type, $message): RedirectResponse {

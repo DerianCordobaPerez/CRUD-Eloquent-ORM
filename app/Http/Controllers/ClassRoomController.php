@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Classes;
 use App\Models\ClassRoom;
 use App\Models\Teacher;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 
 class ClassRoomController extends Controller {
     const ROUTE = 'http://127.0.0.1:8000/';
+    const ADMIN = 'admin';
 
     /**
      * Display a listing of the resource.
@@ -81,8 +83,11 @@ class ClassRoomController extends Controller {
      * @return RedirectResponse
      */
     public function destroy($id): RedirectResponse {
-        (new ClassRoom())->where('id', $id)->delete();
-        return redirect()->away(self::ROUTE.'classroom/show')->with('error', 'Aula eliminada correctamente')->with('classrooms', ClassRoom::all());
+        if(Auth::check() && Auth::user()->name === self::ADMIN) {
+            (new ClassRoom())->where('id', $id)->delete();
+            return redirect()->away(self::ROUTE.'classroom/show')->with('error', 'Aula eliminada correctamente')->with('classrooms', ClassRoom::all());
+        }
+        return $this->redirectToHome('error', 'Solo el Administrador puede realizar esta operacion');
     }
 
     private function redirectToHome($type, $message): RedirectResponse {

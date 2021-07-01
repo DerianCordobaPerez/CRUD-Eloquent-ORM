@@ -12,9 +12,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed role_id
  * @mixin Builder
  */
-class RolesUser extends Model {
+class RoleUser extends Model {
     use HasFactory;
 
+    protected $table = 'role_user';
     protected $guarded = ['id'];
     protected $fillable = ['user_id', 'role_id'];
     public $incrementing = true;
