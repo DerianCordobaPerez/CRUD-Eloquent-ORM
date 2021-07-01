@@ -9,6 +9,7 @@
                     <th scope="col"><h3>Acciones</h3> </th>
                 </tr>
                 </thead>
+
                 <tbody>
                 @foreach($roleUser as $role)
                     <tr>
@@ -17,14 +18,15 @@
                                 <b>Nombre usuario:</b> {{(new \App\Models\User())->find($role->user_id)->name}}<br>
                                 <b>Nombre rol:</b> {{(new \App\Models\Role())->find($role->role_id)->name}}<br>
                             </td>
-                        <td>
-                            <div class="btn-group mx-auto" role="group" aria-label="derian">
-                                <form action="{{url("/role_user/delete/$role->id")}}" method="POST">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" name="send">Eliminar</button>
-                                </form>
-                            </div>
-                        </td>
+
+                            <td>
+                                <div class="btn-group mx-auto" role="group" aria-label="derian">
+                                    <form action="{{url("/role_user/delete/$role->id")}}" method="POST">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="btn btn-danger" name="send">Eliminar</button>
+                                    </form>
+                                </div>
+                            </td>
                         @endif
                     </tr>
                 @endforeach

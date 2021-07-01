@@ -6,6 +6,7 @@ use App\Models\Classes;
 use App\Models\ClassRoom;
 use App\Models\Imparts;
 use App\Models\Teacher;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Contracts\Support\Renderable;
@@ -72,19 +73,17 @@ class ImpartsController extends Controller {
      * @return Renderable|RedirectResponse
      */
     public function edit($id):Renderable|RedirectResponse {
-        if(Auth::check()) {
-            if(Auth::user()->can('edit', (new Teacher())->find($id)))
-                return view('imparts.createOrEdit')
-                    ->with('id', $id)
-                    ->with('impart', [
-                        (new Imparts())->find($id)->teacher_id,
-                        (new Imparts())->find($id)->classroom_id,
-                        (new Imparts())->find($id)->code_class,
-                    ])
-                    ->with('content', [Teacher::all(), ClassRoom::all(), Classes::all()])
-                    ->with('names', ['teacher', 'classroom', 'class'])
-                    ->with('exists_all_records', (count(Teacher::all()) > 0 && count(ClassRoom::all()) > 0 && count(Classes::all()) > 0));
-        }
+        if((Auth::check() && Auth::user()->can('edit', (new Imparts())->find($id))) || Auth::user()->name === self::ADMIN)
+            return view('imparts.createOrEdit')
+                ->with('id', $id)
+                ->with('impart', [
+                    (new Imparts())->find($id)->teacher_id,
+                    (new Imparts())->find($id)->classroom_id,
+                    (new Imparts())->find($id)->code_class,
+                ])
+                ->with('content', [Teacher::all(), ClassRoom::all(), Classes::all()])
+                ->with('names', ['teacher', 'classroom', 'class'])
+                ->with('exists_all_records', (count(Teacher::all()) > 0 && count(ClassRoom::all()) > 0 && count(Classes::all()) > 0));
         return $this->redirectToHome('error', 'No estas autorizado para esta accion');
     }
 

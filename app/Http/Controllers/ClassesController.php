@@ -57,7 +57,7 @@ class ClassesController extends Controller {
      * @return Renderable|RedirectResponse
      */
     public function edit($id):Renderable|RedirectResponse {
-        if(Auth::check() && Auth::user()->can('edit', (new Teacher())->find($id)))
+        if((Auth::check() && Auth::user()->can('edit', (new Classes())->find($id))) || Auth::user()->name === self::ADMIN)
             return view('classes.createOrEdit')->with('class', (new Classes())->find($id));
         return $this->redirectToHome('error', 'No estas autorizado para esta accion');
     }

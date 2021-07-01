@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Classes;
 use App\Models\ClassRoom;
 use App\Models\Teacher;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Contracts\Support\Renderable;
@@ -57,10 +58,8 @@ class ClassRoomController extends Controller {
      * @return Renderable|RedirectResponse
      */
     public function edit($id):Renderable|RedirectResponse {
-        if(Auth::check()) {
-            if(Auth::user()->can('edit', (new Teacher())->find($id)))
-                return view('classroom.createOrEdit')->with('classroom', (new ClassRoom())->find($id));
-        }
+        if((Auth::check() && Auth::user()->can('edit', (new ClassRoom())->find($id))) || Auth::user()->name === self::ADMIN)
+            return view('classroom.createOrEdit')->with('classroom', (new ClassRoom())->find($id));
         return $this->redirectToHome('error', 'No estas autorizado para esta accion');
     }
 
