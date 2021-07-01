@@ -63,8 +63,7 @@ Route::delete('/impart/delete/{id}', [ImpartsController::class, 'destroy']);
 Route::get('/role_user/assign', [RolesUserController::class, 'create']);
 Route::post('/role_user/assign', [RolesUserController::class, 'store']);
 
-Route::get('/role_user/edit/{id}', [RolesUserController::class, 'edit']);
-Route::post('/role_user/edit', [RolesUserController::class, 'update']);
+Route::get('/role_user/show', [RolesUserController::class, 'show']);
 
 Route::delete('/role_user/delete/{id}', [RolesUserController::class, 'destroy']);
 /*------------------------------------------------------------------------------------------------*/

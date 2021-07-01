@@ -33,6 +33,12 @@ class RolesUserController extends Controller {
             ->with('exists_all_records', (count((new User())->select()->whereNotIn('name', ['admin'])->get()) > 0 && count(Role::all()) > 0));
     }
 
+    public function show():Renderable|RedirectResponse {
+        if(Auth::check() && Auth::user()->name === self::ADMIN)
+            return view('roles.list')->with('roleUser', RoleUser::all());
+        return $this->redirectToHome('error', 'Solo el Administrador puede realizar esta operacion');
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -50,55 +56,12 @@ class RolesUserController extends Controller {
         return $this->redirectToHome("success", "Se agregaro correctamente el roles");
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  $id
-     * @return Renderable|RedirectResponse
-     */
-    public function edit($id):Renderable|RedirectResponse {
-        if(trim(strtolower(Auth::user()->name)) !== self::ADMIN)
-            return $this->redirectToHome("error", "Solo el Administrador puede acceder a esta ruta");
-
-        return view('roles.assignOrEdit')
-            ->with('id', $id)
-            ->with('roles', [
-                (new RoleUser())->find($id)->user_id,
-                (new RoleUser())->find($id)->role_id
-            ])
-            ->with('content', [(new User())->select()->whereNotIn('name', ['admin'])->get(), Role::all()])
-            ->with('names', ['users', 'roles'])
-            ->with('exists_all_records', (count(User::all()) > 0 && count(Role::all()) > 0));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function update(Request $request):RedirectResponse {
-        if(trim(strtolower(Auth::user()->name)) !== self::ADMIN)
-            return $this->redirectToHome("error", "Solo el Administrador puede acceder a esta ruta");
-
-        (new RoleUser())->where('id', '=', $request->id ?? '')->update([
-            'user_id' => $request->users ?? '',
-            'role_id' => $request->roles ?? ''
-        ]);
-        return $this->redirectToHome("success", "Se actualizo correctamente el roles");
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param $id
-     * @return RedirectResponse
-     */
     public function destroy($id):RedirectResponse {
-        if(trim(strtolower(Auth::user()->name)) !== self::ADMIN)
-            return $this->redirectToHome("error", "Solo el Administrador puede acceder a esta ruta");
-
-        (new RoleUser())->where('id', $id)->delete();
-        return $this->redirectToHome("success", "Se elimino correctamente el roles");
+        if(Auth::check() && Auth::user()->name === self::ADMIN) {
+            (new RoleUser())->where('id', $id)->delete();
+            return redirect()->away(self::ROUTE.'role_user/show')->with('success', 'Rol eliminado correctamente')->with('roleUser', RoleUser::all());
+        }
+        return $this->redirectToHome('error', 'Solo el Administrador puede realizar esta operacion');
     }
 
     private function redirectToHome($type, $message): RedirectResponse {

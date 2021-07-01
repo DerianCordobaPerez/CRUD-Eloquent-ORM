@@ -16,6 +16,7 @@
                                 @if(count($roles) > 0)
                                     <option disabled value="{{$roles[$i]}}">{{$roles[$i]}} - actual</option>
                                 @endif
+
                                 @foreach($content[$i] as $item)
                                     <option value="{{$item->id}}">
                                         {{$item->id}} - {{$item->name}}

@@ -103,6 +103,10 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                 <a href="{{url('/role_user/assign')}}" class="dropdown-item">Agregar Roles</a>
 
+                                @if(Auth::user()->name === 'admin')
+                                    <a href="{{url('/role_user/show')}}" class="dropdown-item">Listar Roles</a>
+                                @endif
+
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
