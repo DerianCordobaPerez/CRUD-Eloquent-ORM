@@ -4,8 +4,9 @@ namespace Database\Factories;
 
 use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use JetBrains\PhpStorm\ArrayShape;
 
-class RolesFactory extends Factory
+class RoleFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
@@ -19,10 +20,11 @@ class RolesFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    #[ArrayShape(['id' => "int", 'name' => "int|null|string"])]
+    public function definition() {
         return [
-            //
+            'id' => $this->faker->unique()->numberBetween(1, 15),
+            'name' => $this->faker->randomElement(['create', 'edit'])
         ];
     }
 }

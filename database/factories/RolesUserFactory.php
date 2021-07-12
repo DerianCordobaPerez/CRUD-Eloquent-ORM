@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\RoleUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use JetBrains\PhpStorm\ArrayShape;
 
 class RolesUserFactory extends Factory
 {
@@ -19,10 +20,12 @@ class RolesUserFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    #[ArrayShape(['id' => "int", 'user_id' => "int", 'role_id' => "int"])]
+    public function definition() {
         return [
-            //
+            'id' => $this->faker->unique()->numberBetween(1, 15),
+            'user_id' => $this->faker->unique()->numberBetween(1, 15),
+            'role_id' => $this->faker->unique()->numberBetween(1, 15)
         ];
     }
 }
